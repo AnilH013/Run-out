@@ -24,7 +24,7 @@ public class CoinMan extends ApplicationAdapter {
 	Texture gameover;
 	int manState = 0;
 	int pause = 0;
-	float gravity = 0.6f;
+	float gravity = 1f;
 	float velocity = 0;
 	int manY = 0;
 	Rectangle manRectangle;
@@ -36,6 +36,30 @@ public class CoinMan extends ApplicationAdapter {
 
 //génerateur auto
 	Random random;
+
+
+
+//diamant
+
+	ArrayList<Integer> diamondXs = new ArrayList<Integer>();
+	ArrayList<Integer> diamondYs = new ArrayList<Integer>();
+	ArrayList<Rectangle> diamondRectangles = new ArrayList<Rectangle>();
+
+	Texture diamond;
+	int diamondCount;
+
+
+
+//Etoile
+
+	ArrayList<Integer> star1Xs = new ArrayList<Integer>();
+	ArrayList<Integer> star1Ys = new ArrayList<Integer>();
+	ArrayList<Rectangle> star1Rectangles = new ArrayList<Rectangle>();
+
+	Texture star1;
+	int star1Count;
+
+
 
 // coin
 	ArrayList<Integer> coinXs = new ArrayList<Integer>();
@@ -81,6 +105,9 @@ public class CoinMan extends ApplicationAdapter {
 		random = new Random();
 		bullet = new Texture("bullet.png");
 		random = new Random();
+		star1 = new Texture("star1.png");
+		random = new Random();
+		diamond = new Texture("diamond.png");
 
 		dizzy = new Texture("dizzy-1.png");
 
@@ -94,6 +121,21 @@ public class CoinMan extends ApplicationAdapter {
 
 
 
+	}
+
+
+	//fonction star1
+	public void makeDiamond() {
+		float height = random.nextFloat() * Gdx.graphics.getHeight();
+		diamondYs.add((int)height);
+		diamondXs.add(Gdx.graphics.getWidth());
+	}
+
+	//fonction star1
+	public void makeStar1() {
+		float height = random.nextFloat() * Gdx.graphics.getHeight();
+		star1Ys.add((int)height);
+		star1Xs.add(Gdx.graphics.getWidth());
 	}
 
 	//fonction Piece
@@ -134,9 +176,37 @@ public class CoinMan extends ApplicationAdapter {
 				backgroundPosition = 0;
 			}
 
-			//System.out.println("position image = "+backgroundPosition);
-			//System.out.println(Gdx.graphics.getHeight()-manRectangle.getHeight());
 
+			//diamond
+			if (diamondCount < 400) {
+				diamondCount++;
+			} else {
+				diamondCount = 0;
+				makeDiamond();
+			}
+
+			diamondRectangles.clear();
+			for (int i=0;i < diamondXs.size();i++){
+				batch.draw(diamond, diamondXs.get(i),diamondYs.get(i));
+				diamondXs.set(i, diamondXs.get(i) - 8 );
+				diamondRectangles.add(new Rectangle(diamondXs.get(i),diamondYs.get(i), diamond.getWidth(), diamond.getHeight()));
+			}
+
+
+			//star1
+			if (star1Count < 175) {
+				star1Count++;
+			} else {
+				star1Count = 0;
+				makeStar1();
+			}
+
+			star1Rectangles.clear();
+			for (int i=0;i < star1Xs.size();i++){
+				batch.draw(star1, star1Xs.get(i),star1Ys.get(i));
+				star1Xs.set(i, star1Xs.get(i) - 8 );
+				star1Rectangles.add(new Rectangle(star1Xs.get(i),star1Ys.get(i), star1.getWidth(), star1.getHeight()));
+			}
 
 
 			//bullet
@@ -249,6 +319,16 @@ public class CoinMan extends ApplicationAdapter {
 				bulletYs.clear();
 				bulletRectangles.clear();
 				bulletCount = 0;
+				star1Xs.clear();
+				star1Ys.clear();
+				star1Rectangles.clear();
+				star1Count = 0;
+				diamondXs.clear();
+				diamondYs.clear();
+				diamondRectangles.clear();
+				diamondCount = 0;
+
+
 				//
 
 			}
@@ -286,6 +366,28 @@ public class CoinMan extends ApplicationAdapter {
 		for (int i=0; i < bulletRectangles.size();i++) {
 			if (Intersector.overlaps(manRectangle, bulletRectangles.get(i))){
 				gameState = 2;
+			}
+		}
+
+		for (int i=0; i < star1Rectangles.size();i++) {
+			if (Intersector.overlaps(manRectangle, star1Rectangles.get(i))){
+				score+=5;
+
+				star1Rectangles.remove(i);
+				star1Xs.remove(i);
+				star1Ys.remove(i);
+				break;
+			}
+		}
+
+		for (int i=0; i < diamondRectangles.size();i++) {
+			if (Intersector.overlaps(manRectangle, diamondRectangles.get(i))){
+				score+=10;
+
+				diamondRectangles.remove(i);
+				diamondXs.remove(i);
+				diamondYs.remove(i);
+				break;
 			}
 		}
 
