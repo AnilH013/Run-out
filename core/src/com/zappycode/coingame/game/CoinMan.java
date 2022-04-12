@@ -125,7 +125,6 @@ public class CoinMan extends ApplicationAdapter {
 		batch.begin();
 		batch.draw(background, backgroundPosition,0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		batch.draw(background, backgroundPosition+Gdx.graphics.getWidth(),0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-
 		if (gameState == 1) {
 
 			if(backgroundPosition<Gdx.graphics.getWidth()){
@@ -135,7 +134,8 @@ public class CoinMan extends ApplicationAdapter {
 				backgroundPosition = 0;
 			}
 
-			System.out.println("position image = "+backgroundPosition);
+			//System.out.println("position image = "+backgroundPosition);
+			//System.out.println(Gdx.graphics.getHeight()-manRectangle.getHeight());
 
 
 
@@ -220,8 +220,8 @@ public class CoinMan extends ApplicationAdapter {
 
 			}
 
-			if (manY > 886) {
-				manY = 886;
+			if (manY > (Gdx.graphics.getHeight()-manRectangle.getHeight())) {
+				manY = (int) (Gdx.graphics.getHeight()-manRectangle.getHeight());
 			}
 
 
@@ -301,3 +301,5 @@ public class CoinMan extends ApplicationAdapter {
 
 	}
 }
+
+
